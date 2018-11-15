@@ -16,25 +16,29 @@ class Game:
         cur_shot = Shot()
         cur_player = random.randint(0, 5)
         big_player = cur_player
+        num_pass = self.reset_num_pass()
         while not self.is_finish():
             # print(f"cur_shot={cur_shot}, cur={cur_player}, big={big_player}, finish={self.finish_players}")
-            while cur_player in self.finish_players:
-                cur_player = cur_player + 1 if cur_player < 5 else 0
-            if big_player == cur_player:
+            if num_pass == 0:
                 cur_shot = Shot()
                 self.show_all_cards()
+                num_pass = self.reset_num_pass()
             shot = self.players[cur_player].next_shot(cur_shot)
             if shot.type != 0:
                 cur_shot = shot
                 big_player = cur_player
-            print(f"Player{cur_player}: {str(shot)}")
+                num_pass = self.reset_num_pass()
+            else:
+                num_pass -= 1
+            print(f"Player{cur_player}: {str(shot)}, num_pass={num_pass}")
             if self.players[cur_player].is_finish():
                 print(f"Player{cur_player} finishes")
                 self.finish_players.append(cur_player)
-                big_player = cur_player + 1 if cur_player < 5 else 0
-                while big_player in self.finish_players:
-                    big_player = big_player + 1 if big_player < 5 else 0
-            cur_player = cur_player + 1 if cur_player < 5 else 0
+                big_player = self.next_player(big_player)
+            cur_player = self.next_player(cur_player)
+
+    def reset_num_pass(self):
+        return 6 - 1 - len(self.finish_players)
 
     def is_finish(self):
         if {0, 2, 4}.issubset(set(self.finish_players)):
@@ -44,6 +48,12 @@ class Game:
         else:
             return False
         return True
+
+    def next_player(self, cur_player):
+        cur_player = cur_player + 1 if cur_player < 5 else 0
+        while cur_player in self.finish_players:
+            cur_player = cur_player + 1 if cur_player < 5 else 0
+        return cur_player
 
     @staticmethod
     def initial_cards():
