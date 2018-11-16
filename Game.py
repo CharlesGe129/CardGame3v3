@@ -1,6 +1,7 @@
 import random
-from Player import Player, CARDS
+from Player import Player
 from Shot import Shot
+from Consts import CARDS
 
 
 class Game:
