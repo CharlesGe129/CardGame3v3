@@ -76,6 +76,8 @@ class Game:
     def show_all_cards(self):
         print('======== all cards ========')
         for i in range(6):
+            if i in self.finish_players:
+                continue
             print(f"Player{i}: ", end='')
             self.players[i].show_cards()
         print('===========================')

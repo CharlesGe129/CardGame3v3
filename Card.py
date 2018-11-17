@@ -21,7 +21,7 @@ class Card:
         rs = {1: list(), 2: list(), 3: list(), 4: list(), 5: list(), 6: list()}
         cur_card = CARDS[cards[0].num]
         cur_num = 0
-        cards.append(Card(num=14, color=1, card='null'))
+        cards.append(Card(num=1, color=1, card='null'))
         for card in cards:
             if cur_num == 0:
                 cur_card = CARDS[card.num]
@@ -39,4 +39,16 @@ class Card:
                     rs[cur_num].append(cur_card)
                 cur_card = CARDS[card.num]
                 cur_num = 1
+        rs[6] = [''.join(rs[6])] if rs[6] else []
         return rs
+
+    @staticmethod
+    def get_5_level(cards):
+        # straight, flush, full house, four, flush straight, five
+        big = 0
+        for card in cards:
+            big = max(big, cards.count(card))
+        if big >= 3:
+            return big
+        # straight, flush, flush straight
+        return 1
